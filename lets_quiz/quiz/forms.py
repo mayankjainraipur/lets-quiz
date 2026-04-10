@@ -45,7 +45,7 @@ User = get_user_model()
 
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField()
+    username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput)
 
     def clean(self, *args, **kwargs):
@@ -64,9 +64,10 @@ class UserLoginForm(forms.Form):
 
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
+    username = forms.CharField(max_length=30)
+    email = forms.EmailField(required=True, max_length=100)
+    first_name = forms.CharField(required=True, max_length=30)
+    last_name = forms.CharField(required=True, max_length=30)
 
     class Meta:
         model = User

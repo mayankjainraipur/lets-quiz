@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
 from .models import QuizProfile, Question, AttemptedQuestion
 from .forms import UserLoginForm, RegistrationForm
@@ -19,9 +20,23 @@ def user_home(request):
 
 
 def leaderboard(request):
-
-    top_quiz_profiles = QuizProfile.objects.order_by('-total_score')[:500]
-    total_count = top_quiz_profiles.count()
+    page = request.GET.get('page', 1)
+    
+    # Get all quiz profiles ordered by score
+    all_quiz_profiles = QuizProfile.objects.order_by('-total_score')
+    
+    # Create paginator with 100 items per page
+    paginator = Paginator(all_quiz_profiles, 100)
+    
+    try:
+        top_quiz_profiles = paginator.page(page)
+    except PageNotAnInteger:
+        top_quiz_profiles = paginator.page(1)
+    except EmptyPage:
+        top_quiz_profiles = paginator.page(paginator.num_pages)
+    
+    total_count = all_quiz_profiles.count()
+    
     context = {
         'top_quiz_profiles': top_quiz_profiles,
         'total_count': total_count,

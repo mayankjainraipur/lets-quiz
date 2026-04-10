@@ -159,4 +159,20 @@ bh_unicode_properties.cache
 GitHub.sublime-settings
 
 
+# macOS
+.DS_Store
+
+# Pipenv lock file
+Pipfile.lock
+
+# SQLite journal files
+db.sqlite3-journal
+
+# Django collected static files
+staticfiles/
+
+# IDE files
+.vscode/
+.idea/
+
 # End of https://www.gitignore.io/api/linux,django,python,sublimetext

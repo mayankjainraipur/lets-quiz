@@ -25,8 +25,11 @@ def leaderboard(request):
     # Get all quiz profiles ordered by score
     all_quiz_profiles = QuizProfile.objects.order_by('-total_score')
     
-    # Create paginator with 100 items per page
-    paginator = Paginator(all_quiz_profiles, 100)
+    # Limit to top 500 users
+    top_500_profiles = all_quiz_profiles[:500]
+    
+    # Create paginator with 100 items per page (5 pages total for 500 users)
+    paginator = Paginator(top_500_profiles, 100)
     
     try:
         top_quiz_profiles = paginator.page(page)
@@ -36,10 +39,12 @@ def leaderboard(request):
         top_quiz_profiles = paginator.page(paginator.num_pages)
     
     total_count = all_quiz_profiles.count()
+    limited_count = top_500_profiles.count()
     
     context = {
         'top_quiz_profiles': top_quiz_profiles,
         'total_count': total_count,
+        'limited_count': limited_count,
     }
     return render(request, 'quiz/leaderboard.html', context=context)
 
